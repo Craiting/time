@@ -1,0 +1,41 @@
+{% extends 'splash_header.html' %}
+{% block title %}Aetas{% endblock %}
+{% block main %}
+ 
+<head>
+<title>Aetas - Time Tracking, Job Costing, and Automated Data Reporting</title>
+<meta name="description" content="">
+</head>
+
+<style type="text/css">
+	.guard { display:none;}
+</style>
+
+<br><br><br>
+<center>
+	<h3 style="color:lightslategray;">For more information and pricing details email us at 
+		<script type="text/javascript">
+			var front = "info";
+			var back = "aetas.me";
+			document.write('<a style="color:deepskyblue;" href="mailto:'+ front + '@' + back + '">' + front + '@' + back + '<\/a>');
+		</script>
+		or complete the form below:
+	<h3>
+</center>
+<br>
+
+<center><form action="/contact_us/" method="post">
+	{% csrf_token %}
+    <p style="color:lightslategray;font-size:14pt;">Your name <input type="text" name="name" style="width:350px;font-size:16pt;"/></p>
+    <p style="color:lightslategray;font-size:14pt;">Your email <input type="text" name="email" style="width:350px;font-size:16pt;"/></p>
+    <p class="guard">Leave this box empty to verify you are a human: <input type="text" name="url" value=" "/></p>
+    <p style="color:lightslategray;"><textarea name="message" style="height:300px;width:700px;font-size:16pt;" placeholder="Your message..."></textarea></p>
+    <p><input type="submit" class="btn btn-info" value="Send"/></p>
+</form></center>
+
+<br><br><br><br><br><br><br><br><br>
+<center><h5 style="color:lightgray">aetas.me | logan ut usa | 2015 | ver. 2.5.8</h5></center>
+<br><br><br><br><br>
+
+
+{% endblock %}

@@ -1,0 +1,19 @@
+body{
+	background-color: #EEE;
+}
+
+.login-container{
+	background-color: #FFF;
+	border: 1px solid #DDD;
+	margin: auto;
+	min-width: 300px;
+	max-width: 450px;
+	padding: 20px;
+	margin-top: 100px;
+	-webkit-box-shadow: 1px 3px 3px #BBB;
+	box-shadow: 1px 3px 3px #BBB;
+}
+
+img{
+	width: 175px;
+}

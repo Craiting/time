@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+
+<script src='{% static "../static/js/ManageOption.js" %}'>
+</script>
+<script>
+	// incrementor to determine which container new chart will go in to
+	i=0;
+</script>
+
+<div class="col-xs-9">
+	<div class="default-container" id='report-job-costing1' style='display: block;'>
+		<h5>Displaying data from {{startDate}} to {{endDate}} for {{projectName}}<h5>
+			<h3>{{selectedProject}}</h3>
+			<table class="table">
+				<tr style="background-color:aliceblue;"><td><b>Individual Time Entries</b></td><td><b>Date Completed</b></td><td><b>Time Spent</b></td></tr>
+			{% for save in selectedProject.jobcostsave_set.all %}
+				{% if save.minutes and save.formatDate >= startDate and save.formatDate <= endDate %}
+				<tr><td>{{ save.user }}</td><td>{{ save.date }}</td><td>{{ save.toHourAndMinutes }}</td></tr>
+				{% endif %}
+			{% endfor %}
+			<tr style="background-color:aliceblue;"><td><b>Employee Totals</b></td><td></td><td><b>Total Time</b></td></tr>
+			{% for key,value in timePerEmployeeFormatted.items %}
+				<tr style="background-color:aliceblue;"><td>{{ key }}</td><td></td><td>{{ value }}</td></tr>
+			{% endfor %}
+			<tr style="background-color:aliceblue;"><td><b>Total Project Time</b></td><td></td><td><b>{{ totalProjectTimeFormatted }}<b></td></tr>
+			
+			</table>
+			<div id="chartSpace"></div>
+			<script src="http://code.highcharts.com/highcharts.js"></script>
+			<script type="text/javascript">
+
+				    // Make monochrome colors and set them as default for all pies
+				    Highcharts.getOptions().plotOptions.pie.colors = (function () {
+				        var colors = [],
+				            base = Highcharts.getOptions().colors[0],
+				            i;
+
+				        for (i = 0; i < 10; i += 1) {
+				            // Start out with a darkened base color (negative brighten), and end
+				            // up with a much brighter color
+				            colors.push(Highcharts.Color(base).brighten((i - 3) / 7).get());
+				        }
+				        return colors;
+				}());
+				var container = $('<div>').appendTo("div#chartSpace");
+		    	// Build the pie chart
+		    	var chart = new Highcharts.Chart({
+		        	chart: {
+		            	plotBackgroundColor: null,
+		            	plotBorderWidth: null,
+		            	plotShadow: false,
+		           		renderTo: container[i]
+		        	},
+		        	title: {
+		            	text: 'Employee Breakdown for {{selectedProject}}'
+		        	},
+		        	credits: {
+	            		enabled: false // hide the highchart.com link in the bottom right corner
+	        		},
+		        	tooltip: {
+		            	pointFormat: '{series.name}: <b>{point.percentage:.1f}</b>'
+		        	},
+		        	plotOptions: {
+		            	pie: {
+		                	allowPointSelect: true,
+		                	cursor: 'pointer',
+		                	dataLabels: {
+		                    	enabled: true,
+		                    	format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+		                    	style: {
+		                    	    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+		                    	}
+		                	}
+		            	}
+		        	},
+		        	series: [{
+		            	type: 'pie',
+		            		name: '% of total project time',
+		            			data: [
+		            				{% for key,value in timePerEmployeeInMinutes.items %}
+		            						['{{key}}', {{value}}],
+		            				{% endfor %}
+		            			]
+		        			}]
+		    			});
+				i++;
+			</script>
+	</div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,45 @@
+<head>
+
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="/static/css/fbposter.css" rel="stylesheet">
+  <link href="/static/css/bootstrap.css" rel="stylesheet">
+  <link href="/static/css/empTime.css" rel="stylesheet">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</head>
+
+<div>
+	<table class="table">
+            <tr class="table-head"><th>Start Date</th><th>Start Time</th><th>End Date</th><th>End Time</th><th>Total</th></tr>
+            {% for obj in clocks %}
+                <tr><td>{{obj.start_time.date}}</td><td>{{obj.start_time.time}}</td><td>{{obj.end_time.date}}</td><td>{{obj.end_time.time}}</td><td>
+                    <script type="text/javascript">
+                        var time = parseInt({{obj.total_time}});
+                        var hr;
+                        var min;
+                        if(time >= 60){
+                            hr = parseInt(time/60);
+                            min = time%60;
+                            var formatted = hr.toString() + ":" + min.toString();
+                            if (min <10){
+                                formatted = hr.toString() + ":0" + min.toString();
+                            }                        
+                            document.write(formatted);
+                        }
+                        else{
+                            hr = 0;
+                            min = time;
+                        var formatted = "0:"+ min.toString();
+                        if (min <10){
+                                formatted = "0:0"+ min.toString();
+                            }
+                        document.write(formatted);
+                        }
+                    </script>
+                    <!-- {{obj.total_time}} minutes --></td></tr>
+            {% endfor %}
+        </table>
+        <p><b>Total Time {{ hour}}:{{minutes}}</b></p>
+</div>

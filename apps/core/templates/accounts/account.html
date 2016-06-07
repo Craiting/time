@@ -1,0 +1,20 @@
+{% extends 'base_header.html' %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+<script src="js/scripts.js"></script>
+
+<div class="default-container no-padding" id="adjust">
+	<div class="adjust-list" id="list">
+		<div style="padding: 20px;">
+			<p>Username: {{ user }}</p>
+			<p>Name: {{ currPerson }} </p>
+			<p>Email: {{ user.email }}</p>
+			<p><a href='{% url 'edit_account' %}'>Edit account details</a></p>
+			<p><a href='{% url 'change_password' %}'>Change password</a></p>
+			<p>{{message}}</p>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

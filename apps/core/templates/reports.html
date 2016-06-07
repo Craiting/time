@@ -1,0 +1,104 @@
+{% extends 'base_header.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+
+<script src='{% static "../static/js/ManageOption.js" %}'>
+</script>
+<script type='text/javascript'>
+function time_cards(){
+	document.getElementById('timeCardReport').src = '/reports/employee';
+	document.getElementById('report-container').style.display = 'block'
+	document.getElementById('report-job-costing').style.display = 'none';
+	document.getElementById('project-overview').style.display = 'none';
+}
+function show_job_costing(){
+	document.getElementById('jobCostReport').src = '/reports/jobCosting';
+	document.getElementById('report-container').style.display = 'none';
+	document.getElementById('report-job-costing').style.display = 'block';
+	document.getElementById('project-overview').style.display = 'none';
+}
+function project_overview(){
+	document.getElementById('report-container').style.display = 'none';
+	document.getElementById('report-job-costing').style.display = 'none';
+	document.getElementById('project-overview').style.display = 'block';
+}
+</script>
+<div class="col-xs-3">
+	<div class="default-container no-padding space-between-containers">
+		<button class='option' onclick='time_cards();'>Employee Totals</button>
+		<button class='option' onclick='show_job_costing();'>Job Costing</button>
+		<button class='option' onclick='project_overview();'>Project Overview</button>
+	</div>
+</div>
+<div class="col-xs-9" id='report-container' style='display:none;'>
+	<iframe id='timeCardReport' src='/reports/employee' frameBorder='0' width="800" height="1500"></iframe>
+</div>
+
+<div class="col-xs-9" id='report-job-costing' style='display:none;'>
+	<iframe id='jobCostReport' src='/reports/employee' frameBorder='0' width="800" height="1500"></iframe>
+</div>
+
+<div class="col-xs-9">
+	<div class="default-container" id='project-overview' style='display: none;'>
+			
+			<script src='{% static "../static/js/ManageOption.js" %}'></script>
+			<script src="http://code.highcharts.com/highcharts.js"></script>
+
+			<script>
+				$(function () {
+			   		$('#container').highcharts({
+			        chart: {
+			            type: 'column'
+			        },
+			        title: {
+			            text: 'Project Overview'
+			        },
+			        credits: {
+	            		enabled: false // hide the highchart.com link in the bottom right corner
+	        		},
+			        xAxis: {
+			            categories: [
+			            {% for project in projects %}
+			                '{{project}}',
+			            {% endfor %}
+			            ],
+			            crosshair: true
+			        },
+			        yAxis: {
+			            min: 0,
+			            title: {
+			                text: 'Total Time (hours)'
+			            }
+			        },
+			        tooltip: {
+			            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+			            pointFormat: '<tr><td><b>{point.y:.2f} hours</b></td></tr>',
+			            footerFormat: '</table>',
+			            shared: true,
+			            useHTML: true
+			        },
+			        plotOptions: {
+			            column: {
+			                pointPadding: 0.2,
+			                borderWidth: 0
+			            }
+			        },
+			        series: [{
+			            showInLegend: false,
+			            data: [
+			            {% for project in projects %}
+			                {{project.get_total_time_in_minutes}}/60,
+			            {% endfor %}
+			            ]
+			        }]
+			    });
+			});
+	</script>
+	<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+	</div>
+</div>
+{% endblock %}
+

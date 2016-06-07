@@ -1,0 +1,145 @@
+{% extends 'base_header.html' %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+<script type="text/javascript">
+ 	var employeeId="";
+ 	var employeeColor="";
+ 	$(function () {
+  	$('[data-toggle="tooltip"]').tooltip()
+	})
+
+</script>
+
+<div class="col-xs-3 full-height">
+	<div class="default-container no-padding edit-button-padding">
+	<div class=" adjust-list" id="listWithPadding">
+	        {% for emp in myEmployees %}
+	        	{% if emp.curr_clock.is_active == True %}
+					<button class = "employees clocked-in" 
+						 id = "{{emp.first_name}} {{emp.last_name}}"
+						 onmousedown = "
+						 if(employeeId != '' && employeeId != '{{ emp.first_name }} {{ emp.last_name}}'){
+						 	var lastId = employeeId;
+						 	var lastColor = employeeColor;
+							var j = 400;
+							var interIn = setInterval(function(){
+								j = j - 4;
+			 					document.getElementById(lastId).style.boxShadow = 'inset ' + j + 'px 0px 0px ' + lastColor;
+			 					if(j < 1){
+			 						clearInterval(interIn);
+			 					}
+							}, 5);
+						 }"
+						 onmouseup="
+						 document.getElementById('resize').href = 'selectedEmployee/{{ emp.user.id }}';
+						 document.getElementById('employeeInfo').src = 'selectedEmployee/{{ emp.user.id }}';
+						 if(employeeId!= '{{ emp.first_name }} {{ emp.last_name}}'){
+							 var i = 0;
+							 var interOut = setInterval(function(){
+								i = i + 4;
+				 				document.getElementById('{{ emp.first_name }} {{ emp.last_name}}').style.boxShadow = 'inset ' + i + 'px 0px 0px #0099FF';
+			 					if(i > 400){
+			 						clearInterval(interOut);
+			 					}
+							 }, 5);
+							 employeeId = '{{ emp.first_name }} {{ emp.last_name}}';
+							 employeeColor = '#0099FF';
+						 }
+						 ">{{ emp.first_name }} {{ emp.last_name}}</button>
+				{% else %}
+					<button class = "employees clocked-out"
+						id = "{{emp.first_name}} {{emp.last_name}}"
+						 onmousedown = "
+						 if(employeeId != '' && employeeId != '{{ emp.first_name }} {{ emp.last_name}}'){
+						 	var lastId = employeeId;
+						 	var lastColor = employeeColor;
+							var j = 400;
+							var interIn = setInterval(function(){
+								j = j - 4;
+			 					document.getElementById(lastId).style.boxShadow = 'inset ' + j + 'px 0px 0px ' + lastColor;
+			 					if(j < 1){
+			 						clearInterval(interIn);
+			 					}
+							}, 5);
+						 }"
+						 onmouseup="
+						 document.getElementById('resize').href = 'selectedEmployee/{{ emp.user.id }}';
+						 document.getElementById('employeeInfo').src = 'selectedEmployee/{{ emp.user.id }}';
+						 if(employeeId!= '{{ emp.first_name }} {{ emp.last_name}}'){
+							 var i = 0;
+							 var interOut = setInterval(function(){
+								i = i + 4;
+				 				document.getElementById('{{ emp.first_name }} {{ emp.last_name}}').style.boxShadow = 'inset ' + i + 'px 0px 0px #777777';
+			 					if(i > 400){
+			 						clearInterval(interOut);
+			 					}
+							 }, 5);
+							 employeeId = '{{ emp.first_name }} {{ emp.last_name}}';
+							 employeeColor = '#777777';
+						 }
+						 ">{{ emp.first_name }} {{ emp.last_name}}</button>
+				{% endif %}
+
+			{% endfor %}
+		</div>
+        <button class="edit-button" data-toggle="tooltip" data-placement="top" title="Add Employee" id="tooltip"
+        							onclick = "document.getElementById('resize').href = 'add_employee/';
+        									   document.getElementById('employeeInfo').src = 'add_employee/';"
+        							onmousedown="this.style.boxShadow = 'inset 1px 1px 2px #BBB';
+        										 if(employeeId != ''){
+												 	var lastId = employeeId;
+												 	var lastColor = employeeColor;
+													var j = 400;
+													var interIn = setInterval(function(){
+														j = j - 4;
+									 					document.getElementById(lastId).style.boxShadow = 'inset ' + j + 'px 0px 0px ' + lastColor;
+									 					if(j < 1){
+									 						clearInterval(interIn);
+									 					}
+													}, 5);
+													employeeId = '';
+												 }"
+        							onmouseup="this.style.boxShadow = 'none';">+</button>
+
+        <button class="edit-button" data-toggle="tooltip" data-placement="top" title="Delete Employee" id="tooltip"
+        							onclick = "" 
+        							onmousedown="this.style.boxShadow = 'inset 1px 1px 2px #BBB';
+        										 if(employeeId != ''){
+												 	var lastId = employeeId;
+												 	var lastColor = employeeColor;
+													var j = 400;
+													var interIn = setInterval(function(){
+														j = j - 4;
+									 					document.getElementById(lastId).style.boxShadow = 'inset ' + j + 'px 0px 0px ' + lastColor;
+									 					if(j < 1){
+									 						clearInterval(interIn);
+									 					}
+													}, 5);
+													employeeId = '';
+												 }"
+        							onmouseup="this.style.boxShadow = 'none';">&minus;</button>
+</div>
+</div>
+
+<div class="col-xs-9 full-height">
+	<div class="default-container no-padding edit-button-padding" id="right-container">
+		{% if myEmployees.exists %}
+			<iframe src='selectedEmployee/{{ myEmployees.0.user.id }}' class="iframe-info" id="employeeInfo" ></iframe>
+			<script>window.onload = function() {myFunction(document.getElementById('employeeInfo').src = 'selectedEmployee/{{ myEmployees.0.user.id }}')};</script>
+		{% else %}
+			<iframe src='add_employee/' class="iframe-info" id="employeeInfo" ></iframe>
+		{% endif %}
+		<a id="resize" href="">
+		<button type="button" class="edit-button resize" onmousedown="this.style.boxShadow = 'inset 1px 1px 2px #BBB'" data-toggle="tooltip" data-placement="left" title="Full Screen" id="tooltip">
+		<span class="glyphicon glyphicon-resize-full"></span></button>
+		</a>
+		<script>
+			document.getElementById("employeeInfo").onload = myFunction();
+			function myFunction() {
+			    document.getElementById("resize").href = document.getElementById("employeeInfo").src;
+			}
+		</script>
+	</div>
+</div>
+{% endblock %}

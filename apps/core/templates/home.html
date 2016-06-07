@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+ 
+  <script src="js/scripts.js"></script>
+  <h1> splash page </h1>
+  <a href="{% url 'apps.core.views.logout_user' %}"><button>Logout</button></a>
+
+{% endblock %}

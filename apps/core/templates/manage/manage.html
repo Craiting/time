@@ -1,0 +1,173 @@
+{% extends 'base_header.html' %}
+
+{% load static from staticfiles %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+
+ <script src='{% static "../static/js/ManageOption.js" %}'>
+ </script>
+ <script type='text/javascript'>
+
+ function onStart(){
+ 	document.getElementById('right-container').style.display = 'none';
+ 	document.getElementById('project-container').style.display = 'none';
+ 	document.getElementById('group-containter').style.display = 'none';
+ 	document.getElementById('settings-container').style.display = 'none';
+ 	document.getElementById('add-project-container').style.display = 'block'
+ }
+ function displayProjects(){
+ 	document.getElementById('right-container').style.display = 'none';
+ 	document.getElementById('project-container').style.display = 'block';
+ 	document.getElementById('group-containter').style.display = 'none';
+ 	document.getElementById('add-container').style.display = 'none';
+ 	document.getElementById('settings-container').style.display = 'none';
+ 	document.getElementById('add-project-container').style.display = 'none'
+ }
+
+ function createGroup(){
+ 	document.getElementById('right-container').style.display = 'block';
+ 	document.getElementById('right-container').innerHTML = createEmployeeGroup();
+ 	document.getElementById('group-containter').style.display = 'none';
+ 	document.getElementById('project-container').style.display = 'none';
+ 	document.getElementById('add-container').style.display = 'none';
+ 	document.getElementById('settings-container').style.display = 'none';
+ 	document.getElementById('add-project-container').style.display = 'none'
+ }
+ function viewGroups(){
+ 	document.getElementById('right-container').style.display = 'none';
+ 	document.getElementById('project-container').style.display = 'none';
+ 	document.getElementById('group-containter').style.display = 'block';
+ 	document.getElementById('add-container').style.display = 'none';
+ 	document.getElementById('settings-container').style.display = 'none';
+ 	document.getElementById('add-project-container').style.display = 'none'
+ }
+ function addUsertoGroup(){
+ 	document.getElementById('right-container').style.display = 'none';
+ 	document.getElementById('project-container').style.display = 'none';
+ 	document.getElementById('group-containter').style.display = 'none';
+ 	document.getElementById('add-container').style.display = 'block';
+ 	document.getElementById('settings-container').style.display = 'none';
+ 	document.getElementById('add-project-container').style.display = 'none'
+ }
+ function companyOptions(){
+ 	document.getElementById('right-container').style.display = 'none';
+ 	document.getElementById('group-containter').style.display = 'none';
+ 	document.getElementById('project-container').style.display = 'none';
+ 	document.getElementById('add-container').style.display = 'none';
+ 	document.getElementById('settings-container').style.display = 'block';
+ 	document.getElementById('add-project-container').style.display = 'none'
+ }
+
+ </script>
+<div class="col-xs-3">
+	<div class="default-container no-padding space-between-containers">
+		<button class='option' onClick="companyOptions()">View Company Settings</button>
+		<button class='option' onclick="onStart();">Add Project</button>
+		<button class='option' onclick='displayProjects();'>View Projects</button>
+		<button class='option' onclick='createGroup();'>Create Employee Group</button>
+		<button class='option' onclick='viewGroups();'>View Employee Groups</button>
+		<button class='option' onclick='addUsertoGroup();'>Add Employee to Group</button>
+	</div>
+</div>
+<div class="col-xs-9">
+	<div class="default-container" id="right-container">
+		<p>Please select from the options panel</p>
+	</div>
+	<div class='default-container' id='settings-container' style='display: none;'>
+		<p>Company Name: {{ comp.company_name }}</p>
+		<p>Company Phone Number: {{ comp.phone_number }} </p>
+	</div>
+	<div class='default-container' id='group-containter' style='display: none;'>
+			<div class="panel list-group">
+			{% if not groups %}
+			<h3>You have no Groups</h3>
+			{% endif %}
+				{% for gro in groups %}
+				<div class="panel-group" id="accordion">
+			        <div class="panel panel-default">
+			            <div class="panel-heading">
+			                <h4 class="panel-title">
+			                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter}}">{{ gro.name }}</a>
+			                </h4>
+			            </div>
+			            <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in">
+                			<div class="panel-body">
+                    			<table class="table">
+                    				<tr><th>MEMBERS</th><tr>
+                    					{% if not gro.employeeingroup_set.all %}
+										 <tr><td>{{ gro.name }} doesn't have any Members</tr></td>
+										{% endif %}
+                    					{% for emp in gro.employeeingroup_set.all %}
+											<tr><td>{{emp.employee}}</td></tr>
+										{% endfor %}
+									<tr><th>PROJECTS</th><tr>
+										{% if not gro.groupproject_set.all %}
+										 	<tr><td>{{ gro.name }} doesn't have any projects</tr></td>
+										{% endif %}
+										{% for proj in gro.groupproject_set.all %}
+											<tr><td>{{proj.project}}</td></tr>
+										{% endfor %}
+                    			</table>
+                    		</div>
+                		</div>
+            		</div>
+            	</div>					
+				{% endfor %}
+			</div> <!-- end of panel list-group -->
+		
+	</div>
+	<div class="default-container" id="project-container" style='display: none;'>
+		<dl>
+		{% if not projects %}
+			<h3>You don't have any projects yet</h3>
+		{% endif %}
+		{% for pro in projects%}
+				<dt>{{ pro.name }}</dt>
+				<dd>{{ pro.description }}<dd>			
+		{% endfor %}
+		</dl>
+	</div>
+	<div class='default-container' id='add-project-container' style="display: none;">
+		{% if groups %}
+		<form action="/manage/addProject" method="get" class="form-horizontal" onsubmit="">
+				<label for="projectName">Project Name</label>
+				<input type="text" name="projectName" class="form-control" id="firstName" placeholder="Project Name" />
+
+			<label for="description">Description</label> 	
+				<input type="text" name="description" class="form-control" id="lastName" placeholder="Description" />
+			<lavel for="group">Group for project</label>
+				<select class='form-control' name='group' id='group'>
+					{% for gro in groups %}
+						<option value='{{ gro.id }}'>{{ gro.name }}</option>
+					{% endfor %}
+				</select>
+			<input type="submit" class="btn btn-info" name="submit" value="Submit">
+			</form>
+		{% else %}
+			<h3>You must first create a group before you can make a project</h3>
+		{% endif %}
+	</div>
+	<div class="default-container" id="add-container" style='display: none;'>
+		{% if groups %}
+		<form action='/manage/addToGroup/'>
+			<label for='group'>Select a Group</label>
+			<select class="form-control" name='group' id='group'>
+				{% for gro in groups %}
+					<option value='{{ gro.id }}'>{{ gro.name }}</option>
+				{% endfor %}
+			</select>	
+			<label for='employee'>Select an Employee</label>
+			<select class="form-control" name='emp' id='group'>
+				{% for emp in Employees %}
+					<option value='{{ emp.id }}'>{{ emp.first_name }} {{ emp.last_name }}</option>
+				{% endfor %}
+			</select>
+			<input type="submit" class="btn btn-info" value='Add Employee to the group' />
+		</form>
+		{% else %}
+			<h3>You don't have any groups yet.</h3>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

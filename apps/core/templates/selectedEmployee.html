@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Log in{% endblock %}
+
+{% block style %}{% endblock %}
+
+{% block main %}
+<link href="/static/css/selected-employee.css" rel="stylesheet">
+<div class="row-same-height" style="">
+
+	<div class="name-status" style="">
+		<h2 class="capitalize" >{{ Employee.first_name }} {{ Employee.last_name }}</h2>
+	</div>
+
+	<div class="outer">
+		<div class="info">
+			<p>Employee info</p>
+		</div>
+	</div>
+</div>
+
+<div style="height: 85%;">
+	<iframe class="timecard-frame" src="/datepicker/emp/{{ Employee.id }}"></iframe>
+</div>
+{% endblock %}

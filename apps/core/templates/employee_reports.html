@@ -1,0 +1,23 @@
+
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="/static/css/fbposter.css" rel="stylesheet">
+  <link href="/static/css/bootstrap.css" rel="stylesheet">
+  <link href="/static/css/general.css" rel="stylesheet">
+<div class='col-lg-9'>
+	<div class='default-container' width='800' height='500'>
+		<h5>Displaying total time for each employee from {{startDate}} to {{endDate}}<h5>
+		<div class='col-sm-4'>
+		{% for name in names %}
+		<div width='900'>
+			<p >{{ name }}</p>
+		</div>
+		{% endfor %}
+		</div>
+		<div class='right'>
+		{% for time in totalTimes %}
+		<p> {{ time }}</p>
+		{% endfor %}
+	</div>
+	</div>
+</div>

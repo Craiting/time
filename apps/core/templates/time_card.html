@@ -1,0 +1,88 @@
+{% extends 'base_header.html' %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+    <head>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/cupertino/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script>
+                Date.prototype.addDays = function(days){
+                    var dat = new Date(this.valueOf());
+                    dat.setDate(dat.getDate() + days);
+                    return dat;
+                }
+
+                $(function(){
+                    $( "#datepicker1" ).datepicker({
+                        defaultDate: "+0w",
+                        changeMonth: true,
+                        numberOfMonths: 2,
+                        onClose: function( selectedDate ) {
+                            $( "#datepicker2" ).datepicker( "option", "minDate", selectedDate );
+                            var datePicked = new Date(selectedDate);
+                          
+                            $("#datepicker2").datepicker("setDate", datePicked.addDays(14));
+                            }
+                        })
+                    $( "#datepicker2" ).datepicker({
+                        defaultDate: "+0w",
+                        changeMonth: true,
+                        numberOfMonths: 2,
+                        onClose: function( selectedDate ) {
+                            $( "#datepicker1" ).datepicker( "option", "maxDate", selectedDate);
+                        }
+                    })
+                });
+        </script>
+    </head>
+    <div class="default-container no-padding" id="adjust">
+        <div class="adjust-list" id="list">
+            <div style="padding: 20px;">
+                <form action="/dateRange/" method="GET" class="form-horizontal">
+                    <p><h5>Narrow your time card data by date range:</h5></p>
+                    <div class="form-group">
+                        <label for="datepicker1">From: </label>
+                        <input type="text" name="startDate" id="datepicker1" value="{{startDate}}" >
+                        <label for="datepicker2"> To: </label>
+                        <input type="text" name="endDate" id="datepicker2" value="{{endDate}}">
+                        <input type="submit" class="btn btn-info" value="Submit">
+                    </div>
+                </form>
+
+                <table class="table">
+                    <tr class="table-head" ><th>Start Date</th><th>Start Time</th><th>End Date</th><th>End Time</th><th>Total</th></tr>
+                    {% for obj in clocks %}
+                        <tr><td>{{obj.start_time.date}}</td><td>{{obj.start_time.time}}</td><td>{{obj.end_time.date}}</td><td>{{obj.end_time.time}}</td><td>
+                            <script type="text/javascript">
+                                var time = parseInt({{obj.total_time}});
+                                var hr;
+                                var min;
+                                if(time >= 60){
+                                    hr = parseInt(time/60);
+                                    min = time%60;
+                                    var formatted = hr.toString() + ":" + min.toString();
+                                    if (min <10){
+                                        formatted = hr.toString() + ":0" + min.toString();
+                                    }                        
+                                    document.write(formatted);
+                                }
+                                else{
+                                    hr = 0;
+                                    min = time;
+                                var formatted = "0:"+ min.toString();
+                                if (min <10){
+                                        formatted = "0:0"+ min.toString();
+                                    }
+                                document.write(formatted);
+                                }
+                            </script>
+                            <!-- {{obj.total_time}} minutes --></td></tr>
+                    {% endfor %}
+                </table>
+                <p><b>Total Time {{ hour}}:{{minutes}}</b></p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

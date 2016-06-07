@@ -1,0 +1,58 @@
+{% extends 'base_header.html' %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+
+<script src="../static/js/timer.js"></script>
+<link href="../static/css/clock.css" rel="stylesheet" type="text/css">
+
+
+	<div class="default-container no-padding" id="adjust">
+        <div class="adjust-list" id="list">
+            <div style="padding: 20px;">
+        		{% if type = 'Clock in' %}
+
+                <div class="counter">
+                <span>00:00:00</span>
+                </div>
+
+                <hr class="seporator" />
+
+                <div onclick="top.frames.location.href = '/update_clock/{{userID}}';" class="button clock-in">
+                    <p><span class="glyphicon glyphicon-hourglass"></span> Clock In</p>
+                </div>
+
+            	{% else %}
+
+                <script type="text/javascript">
+                    function start(){
+                        runClock({{resume}});//give parameter of time
+                        /*setInterval(function(){ 
+                            alert("Hello there!");
+                            runClock({{resume}}); 
+                        }, 5000);*/
+                    }
+                    window.onload = start;
+                    // window.location.reload();
+                </script>
+
+                <div style="display:none;" id="notifier"></div>
+
+                <div id="redirect_box" class="counter">
+                    <span id="countdown"></span>
+                </div>
+
+                <hr class="seporator" />
+
+                <div onclick="top.frames.location.href = '/end_clock/{{userID}}';" class="button clock-out">
+                    <p><span class="glyphicon glyphicon-hourglass"></span> Clock Out</p>
+                </div>
+        		
+        		{% endif %}
+
+            </div>
+    	</div>
+    </div>
+
+{% endblock %}
+

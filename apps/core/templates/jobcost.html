@@ -1,0 +1,130 @@
+{% extends 'base_header.html' %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+<script src="../static/js/end_percent.js"></script>
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/cupertino/jquery-ui.css">  
+    <link rel="stylesheet" href="/resources/demos/style.css?version=2">  
+</head>
+<script>
+    var sliderCount = 0;
+    var sliderId = 1;
+    var sliderValues = [];
+    var timeEstimate = 0;
+</script>
+<div class='default-container'>
+{% if total_time != None %}
+<h4> Indicate the amount of time you spent on each project by adjusting the sliders below. </h4>
+<h3 style="color:#0099FF;"> Total Time {{ total_time_formatted }}<h3>
+{% endif %}
+    <form method="POST" id="myForm" class="form-horizontal">{% csrf_token %}
+        <input type="hidden" name="total_time" value="{{ total_time }}" class="form-control" id="total_time"/>
+        {% for proj in projects %}
+    	    <h3>{{proj.project}}</h3>
+    	    
+            <link rel="stylesheet" href="../static/css/sliders.css" type="text/css">     
+            <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+            <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+            <ul id="sliders">
+                <div id="sliders">
+                    <div class="slider"></div>
+                    <div style='float:left; color:#0099FF;' id="timeEstimate"></div>
+                    <br>
+                </div>
+                <div style='color:#0099FF;'>%</div>
+            </ul>
+            <script>
+                sliderCount++;
+                sliderId++;
+            </script>
+        {% endfor %}
+            <div id="hiddenData"></div>
+            <script> 
+                var container = $("<li name='percent' style='color:#0099FF;' value=''>0</li>").appendTo("div#sliders");
+                var timeEstimates = $("<li name='timeEstimate' style='color:#0099FF;' value=''>0:00</li>").appendTo("div#timeEstimate");
+                for(var j = 0; j < sliderCount; j++){
+                    var container2 = $("<input type='hidden' id='hiddenField' name='percent'/>").appendTo("div#hiddenData");
+                }
+                var sliders = $("#sliders .slider");
+                sliders.each(function() {
+                    var value = parseInt($(this).text(), 10),
+                        availableTotal = 100;
+
+                    $(this).empty().slider({
+                        value: 0,
+                        min: 0,
+                        max: 100,
+                        range: "max",
+                        step: 1,
+                        animate: 100,
+                        slide: function(event, ui) {
+                            // Update percentage for active slider
+                            $(this).siblings().text(ui.value);
+
+                            var minutes = parseInt((ui.value / 100) * {{total_time}}) % 60
+                            var hours = parseInt((ui.value / 100) * {{total_time}} / 60)
+                            if (minutes < 10){
+                                minutes = "0" + minutes;
+                            }
+
+
+                            $(this).siblings("div#timeEstimate").text(hours + ":" + minutes + " ");
+
+
+                            // Get current total
+                            var total = 0;
+
+                            sliders.not(this).each(function() {
+                                total += $(this).slider("option", "value");
+                            });
+
+                            // Update jq ui value
+                            total += ui.value;
+
+                            var max = availableTotal - total;
+
+                            // Update other sliders
+                            sliders.not(this).each(function() {
+                                var t = $(this),
+                                    value = t.slider("option", "value");
+
+                                var minutes = parseInt((value / 100) * {{total_time}}) % 60
+                                var hours = parseInt((value / 100) * {{total_time}} / 60)
+                                if (minutes < 10){
+                                    minutes = "0" + minutes;
+                                }
+
+                                t.slider("option", "max", max + value).siblings().text(value);
+                                t.slider("option", "max", max + value).siblings("div#timeEstimate").text(hours + ":" + minutes + " ");// + '/' + (max + value) + '%');
+                                t.slider('value', value);
+                            });
+                        }
+                    });
+                });
+
+                function showLiValues(){
+                    
+                    for(var i = 0; i < sliderCount; i++){
+                        
+                        var liVal = parseInt(container[i].textContent || container[i].innerText);
+                        sliderValues.push(liVal);
+                        
+                    }
+                    var vals = document.getElementsByTagName("INPUT");
+
+                    for(var x = 0; x < sliderCount; x++){ 
+                        vals[x+2].value = container[x].textContent || container[x].innerText || container[x].innerHTML;
+                    }
+                    
+                }
+            </script> 
+
+        {% if projects == None %}
+    	   <h3>You don't have access to any projects</h3>
+        {% endif %}
+        <button class="btn btn-info" onclick="showLiValues()"/>Submit</button>
+    </form>
+</div>
+
+{% endblock %}

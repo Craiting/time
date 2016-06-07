@@ -1,0 +1,38 @@
+{% extends 'base_header.html' %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+<script src="js/scripts.js"></script>
+<div class="default-container">
+  <p>Your account:</p>
+
+  <form method="POST" class="form-horizontal">{% csrf_token %}
+    {% for field in form %}
+        <label class="col-lg-3 control-label" for="{{ field.name }}">{{ field.label }}</label>
+        {{ field }}
+    {% endfor %}
+
+<!--     <label for="firstName" class="col-lg-3 control-label" >First Name</label>
+      <input type="text" name="firstName" value="{{ currPerson.first_name }}" class="form-control" id="firstName"/>
+
+    <label for="lastName" class="col-lg-3 control-label" >Last Name</label>
+      <input type="text" name="lastName" value="{{ currPerson.last_name }}" class="form-control" id="lastName"/>
+
+    <label for="email" class="col-lg-3 control-label" >Email</label>
+      <input type="text" name="email" value="{{ currPerson.user.email }}" class="form-control" id="email"/>
+
+    <label for="phoneNumber" class="col-lg-3 control-label" >Phone Number</label>
+      <input type="text" name="phoneNumber" value="{{ currPerson.phone_number}}" class="form-control" id="phoneNumber" maxlength='10'/>
+
+    <label for='userName' class='col-lg-3 control-label'>User Name</label>
+      <input type-"text" name="userName" value='{{ currPerson.user.username }}' class='form-control' id='userName'> -->
+
+    <input type="Submit" class="btn btn-info" value="Save Information" />
+<!--     {% if success %}
+    <p>Updated!</p>
+    {% endif %} -->
+
+  </form>
+</div>
+
+{% endblock %}

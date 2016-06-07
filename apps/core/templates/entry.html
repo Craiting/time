@@ -1,0 +1,14 @@
+{% extends 'base_header.html' %}
+
+{% block title %}HomePage{% endblock %}
+{% block main %}
+
+	<div class="default-container">
+		<h1>Detail entry view</h1>
+		<p>Description: {{ entry.description }}</p>
+		<p>Start Time: {{ entry.start_time }}</p>
+		<p>End Time: {{ entry.end_time }}</p>
+		<p>User: {{ entry.user }} ID:{{entry.user.id }} </p>
+	</div>
+
+{% endblock %}

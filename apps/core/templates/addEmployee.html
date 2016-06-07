@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+{% block main %}
+<link href="/static/css/add-employee.css" rel="stylesheet">
+{% if state = 'Successfully registered employee' %}
+<script type="text/javascript">
+		document.getElementById("employeeInfo").onload = myFunction();
+		function myFunction(){
+			top.frames.location.href = top.frames.location.href;
+		}
+</script>
+{% endif %}
+
+{% if state != null %}
+<div class="alert alert-danger" role="alert">{{ state }}</div>
+{% endif %}
+
+<form action="/saveNewEmployee/" method="get" class="form-horizontal" onsubmit="">
+	<label for="firstName">First Name</label>
+		<input type="text" name="firstName" value="{{firstName}}" class="form-control" id="firstName" placeholder="First Name" />
+
+	<label for="lastName">Last Name</label>
+		<input type="text" name="lastName" value="{{lastName}}" class="form-control" id="lastName" placeholder="Last Name" />
+
+	<label for="email">Email</label>
+		<input type="text" name="email" value="{{email}}" class="form-control" id="email" placeholder="Email" />
+	
+	<label for="phoneNumber">Phone Number</label>
+		<input type="text" name="phoneNumber" value="{{phoneNumber}}" class="form-control" id="phoneNumber" placeholder="Phone Number" maxlength="10"/>
+	
+	<label for="userName">User Name</label>
+		<input type-"text" name="userName" value="{{userName}}" class="form-control" id="phoneNumber" placeholder="Username">
+	
+	<label for="password">Password</label>
+		<input type="password" name="password" value="" class="form-control" id="password" placeholder="password"/>
+		
+		<button type="Submit" class="btn btn-info">Save Employee <span class='glyphicon glyphicon-floppy-disk'></span></button>
+</form>
+
+{% endblock %}

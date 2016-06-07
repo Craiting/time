@@ -1,0 +1,47 @@
+<head>
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="/static/css/fbposter.css" rel="stylesheet">
+  <link href="/static/css/bootstrap.css" rel="stylesheet">
+  <link href="/static/css/general.css" rel="stylesheet">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/cupertino/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script>
+                Date.prototype.addDays = function(days){
+                    var dat = new Date(this.valueOf());
+                    dat.setDate(dat.getDate() + days);
+                    return dat;
+                }
+
+                $(function(){
+                    $( "#datepicker1" ).datepicker({
+                        defaultDate: "+0w",
+                        changeMonth: true,
+                        numberOfMonths: 2,
+                        onClose: function( selectedDate ) {
+                            $( "#datepicker2" ).datepicker( "option", "minDate", selectedDate );
+                            var datePicked = new Date(selectedDate);
+                          
+                            $("#datepicker2").datepicker("setDate", datePicked.addDays(14));
+                            }
+                        })
+                    $( "#datepicker2" ).datepicker({
+                        defaultDate: "+0w",
+                        changeMonth: true,
+                        numberOfMonths: 2,
+                        onClose: function( selectedDate ) {
+                            $( "#datepicker1" ).datepicker( "option", "maxDate", selectedDate);
+                        }
+                    })
+                });
+        </script>
+    </head>
+    <div class="default-container" width='800' height='500'>
+    <form action="/reports/info" method="GET">
+      {{state}}
+        <p><h5>Select a date range to view your employee's total time:</h5></p><p> From: <input type="text" name="startDate" id="datepicker1"> To: <input type="text" name="endDate" id="datepicker2"></p>
+        <input type="submit" class="btn btn-info" value="Submit">
+    </form>

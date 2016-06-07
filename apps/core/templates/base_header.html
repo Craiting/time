@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <meta charset="utf-8">
+    <link rel="icon" 
+      type="image/png" 
+      href="{{STATIC_URL}}logos/aetas-logo.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <title>{% block title %}Aetas{% endblock %}</title>
+
+  <!-- Bootstrap -->
+  <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../static/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="../static/css/fbposter.css" rel="stylesheet">
+  <link href="../static/css/bootstrap.css" rel="stylesheet">
+  <link href="../static/css/general.css" rel="stylesheet">
+  <link href="../static/css/style.css" rel="stylesheet">
+
+  {% block style %}{% endblock %}
+  {% load activelink %}
+
+   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+   <!--[if lt IE 9]>
+     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+   <![endif]-->
+ </head>
+ <body>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/heightAdjust.js"></script>
+
+    <nav role="navigation" class="navbar-fixed-top nav-header">
+    	<div class="container">
+    		<h1><font class="aetas">Aetas</font><font class="me">.me</font></h1>
+        {% if type = 'Clock Out'%}
+        <a class="clock-status" href="">You are clocked in.</a>
+        {% endif %}
+    	</div>
+    	<div class="navigation-bar">
+    		<div class="container">
+	    		<ul class="nav">
+	    			<li><a href="{% url 'clock' %}" class="{% ifcontains 'clock' %}on{% else %}off{% endifcontains %} ">Clock</a></li>
+	    			<li><a href="{% url 'time_card' %}" class="{% ifactive 'time_card' %}on{% else %}off{% endifactive %}">Time Card</a></li>
+	    			{% if manager = 'yes' %}
+            <li><a href="{% url 'employees' %}" class="{% ifactive 'employees' %}on{% else %}off{% endifactive %}">Employees</a></li>
+            <li><a href="/reports/" class="{% ifactive '/reports' %}on{% else %}off{% endifactive %}">Reports</a></li>
+            <li><a href="{% url 'manage_company' %}" class="{% ifcontains 'manage' %}on{% else %}off{% endifcontains %}">Manage Company</a></li>
+            {% endif %}
+	    			<li><a href="{% url 'account' %}" class="{% ifactive 'account' %}on{% else %}off{% endifactive %}">Account</a></li>
+
+            <a class="pull-right logout" href="{% url 'apps.core.views.logout_user' %}"><div><p>Logout</p></div></a>
+            
+	    		</ul>
+	    	</div>
+    	</div>
+  	</nav>
+    <div class="container nav-clearance">
+    	 {% block main %}{% endblock %}
+    </div>
+  </body>
+</html>

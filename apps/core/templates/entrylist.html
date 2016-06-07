@@ -1,0 +1,15 @@
+{% extends 'base_header.html' %}
+
+{% block title %}Aetas{% endblock %}
+{% block main %}
+ 
+	<script src="js/scripts.js"></script>
+	<div class="default-container">
+		<h1> Entry list page</h1>
+		<p>Your name is most likely {{user}}
+		{% for entry in entries %}
+			<p><a href="/entries/{{entry.id}}"> {{ entry.description }}</a></p>
+		{% endfor %}
+	</div> 
+
+{% endblock %}
